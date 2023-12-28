@@ -1,15 +1,12 @@
-
 use crate::draw;
 use crate::state;
 
 use tui_input::backend::crossterm::EventHandler;
 
-
 pub fn run(
     app: &mut app::App,
     ui_state: &mut state::State,
 ) -> Result<(), Box<dyn std::error::Error>> {
-
     // setup terminal
     crossterm::terminal::enable_raw_mode()?;
     let mut stdout = std::io::stdout();
@@ -48,7 +45,7 @@ fn run_app<B: ratatui::backend::Backend>(
 ) -> std::io::Result<()> {
     loop {
         app.start_frame();
-        
+
         // Draw the current state to the terminal
         let draw_start = std::time::SystemTime::now();
         terminal.draw(|f| draw::draw(f, app, ui_state))?;
@@ -59,8 +56,7 @@ fn run_app<B: ratatui::backend::Backend>(
             match app.mode {
                 app::Mode::Normal => {
                     match key.code {
-                        crossterm::event::KeyCode::Esc |
-                        crossterm::event::KeyCode::Char('q') => {
+                        crossterm::event::KeyCode::Esc | crossterm::event::KeyCode::Char('q') => {
                             app.should_quit = true // call func that can cleanup
                         }
                         crossterm::event::KeyCode::Char('j') => {
@@ -99,29 +95,28 @@ fn run_app<B: ratatui::backend::Backend>(
                         app.exit_edit_mode(None);
                     }
                     crossterm::event::KeyCode::Enter => {
-                        app.exit_edit_mode(
-                            Some(ui_state.input.value().to_string())
-                        );
+                        app.exit_edit_mode(Some(ui_state.input.value().to_string()));
                     }
                     _ => {
-                        ui_state.input.handle_event(&crossterm::event::Event::Key(key));
+                        ui_state
+                            .input
+                            .handle_event(&crossterm::event::Event::Key(key));
                     }
                 },
                 app::Mode::Search => {}
                 app::Mode::Confirm(_) => match key.code {
-                    crossterm::event::KeyCode::Esc |
-                    crossterm::event::KeyCode::Char('N') |
-                    crossterm::event::KeyCode::Char('n') => {
+                    crossterm::event::KeyCode::Esc
+                    | crossterm::event::KeyCode::Char('N')
+                    | crossterm::event::KeyCode::Char('n') => {
                         app.cancel_action();
                     }
-                    crossterm::event::KeyCode::Enter |
-                    crossterm::event::KeyCode::Char('Y') |
-                    crossterm::event::KeyCode::Char('y') 
-                        => {
+                    crossterm::event::KeyCode::Enter
+                    | crossterm::event::KeyCode::Char('Y')
+                    | crossterm::event::KeyCode::Char('y') => {
                         app.confirm_action();
                     }
                     _ => {}
-                }
+                },
             }
             elapsed += handle_input_start.elapsed().unwrap().as_secs_f64();
         }

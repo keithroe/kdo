@@ -38,7 +38,7 @@ impl<'a> TasksFilter<'a> {
     pub fn new(tasks: &'a [Task]) -> TasksFilter {
         TasksFilter {
             tasks: tasks.iter().collect(),
-            task_indices: (0..tasks.len()).collect()
+            task_indices: (0..tasks.len()).collect(),
         }
     }
     pub fn num_contexts(&self, include_completed: bool) -> usize {
@@ -68,19 +68,19 @@ impl<'a> TasksFilter<'a> {
     // TODO: avoid the zip/unzip in the with_* functions
     pub fn with_context(mut self, context_opt: Option<&str>) -> TasksFilter<'a> {
         if let Some(context) = context_opt {
-            let tasks_with_indices : Vec<(&Task, usize)> =
-                self.tasks
-                    .into_iter()
-                    .zip(self.task_indices)
-                    .filter(|(task, _index)| {
-                        for c in task.contexts() {
-                            if c == context {
-                                return true;
-                            }
+            let tasks_with_indices: Vec<(&Task, usize)> = self
+                .tasks
+                .into_iter()
+                .zip(self.task_indices)
+                .filter(|(task, _index)| {
+                    for c in task.contexts() {
+                        if c == context {
+                            return true;
                         }
-                        false
-                    })
-                    .collect();
+                    }
+                    false
+                })
+                .collect();
 
             (self.tasks, self.task_indices) = tasks_with_indices.into_iter().unzip();
         }
@@ -89,19 +89,19 @@ impl<'a> TasksFilter<'a> {
 
     pub fn with_project(mut self, project_opt: Option<&str>) -> TasksFilter<'a> {
         if let Some(project) = project_opt {
-            let tasks_with_indices : Vec<(&Task, usize)> =
-                self.tasks
-                    .into_iter()
-                    .zip(self.task_indices)
-                    .filter(|(task, _index)| {
-                        for p in task.projects() {
-                            if p == project {
-                                return true;
-                            }
+            let tasks_with_indices: Vec<(&Task, usize)> = self
+                .tasks
+                .into_iter()
+                .zip(self.task_indices)
+                .filter(|(task, _index)| {
+                    for p in task.projects() {
+                        if p == project {
+                            return true;
                         }
-                        false
-                    })
-                    .collect();
+                    }
+                    false
+                })
+                .collect();
 
             (self.tasks, self.task_indices) = tasks_with_indices.into_iter().unzip();
         }
@@ -110,12 +110,12 @@ impl<'a> TasksFilter<'a> {
 
     pub fn with_priority(mut self, priority_opt: Option<char>) -> TasksFilter<'a> {
         if priority_opt.is_some() {
-            let tasks_with_indices : Vec<(&Task, usize)> =
-                self.tasks
-                    .into_iter()
-                    .zip(self.task_indices)
-                    .filter(|(task, _index)| priority_opt == task.priority)
-                    .collect();
+            let tasks_with_indices: Vec<(&Task, usize)> = self
+                .tasks
+                .into_iter()
+                .zip(self.task_indices)
+                .filter(|(task, _index)| priority_opt == task.priority)
+                .collect();
 
             (self.tasks, self.task_indices) = tasks_with_indices.into_iter().unzip();
         }
@@ -124,12 +124,12 @@ impl<'a> TasksFilter<'a> {
 
     pub fn without_completed(mut self, omit_completed: bool) -> TasksFilter<'a> {
         if omit_completed {
-            let tasks_with_indices : Vec<(&Task, usize)> =
-                self.tasks
-                    .into_iter()
-                    .zip(self.task_indices)
-                    .filter(|(task, _index)| !task.completed)
-                    .collect();
+            let tasks_with_indices: Vec<(&Task, usize)> = self
+                .tasks
+                .into_iter()
+                .zip(self.task_indices)
+                .filter(|(task, _index)| !task.completed)
+                .collect();
 
             (self.tasks, self.task_indices) = tasks_with_indices.into_iter().unzip();
         }

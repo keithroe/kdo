@@ -1,4 +1,3 @@
-
 use chrono::NaiveDate;
 use lazy_static::lazy_static;
 use regex::Regex;
@@ -75,18 +74,19 @@ impl TaskParser {
     }
 
     pub fn parse_line(mut self, line: &str) -> Option<Task> {
-
         let mut token_iter = line.split_whitespace();
 
-        while let Some(token) = token_iter.next() { 
+        while let Some(token) = token_iter.next() {
             self.state = self.next(Token::lex(token));
             if self.state == ParseState::InDescription {
                 self.task.set_description(
-                    format!("{} {}", 
-                        token, 
+                    format!(
+                        "{} {}",
+                        token,
                         //token_iter.remainder().unwrap_or("") // Not in stable yet :(
-                        token_iter.collect::<Vec<_>>().join(" ") 
-                    ).trim()
+                        token_iter.collect::<Vec<_>>().join(" ")
+                    )
+                    .trim(),
                 );
                 break;
             }
@@ -137,28 +137,24 @@ impl TaskParser {
                 self.task.date_created = Some(date);
                 ParseState::PastDate2
             }
-            (_, _) => {
-                ParseState::InDescription
-            }
-
-            /*
-            // Default case -- move to description and append
-            (_, _) => {
-                let s = token.to_string();
-                if s.starts_with('@') {
-                    self.task
-                        .contexts
-                        .push(s.strip_prefix('@').unwrap().to_string());
-                } else if s.starts_with('+') {
-                    self.task
-                        .projects
-                        .push(s.strip_prefix('+').unwrap().to_string());
-                }
-                //self.task.description.push_str(&s);
-                self.task.description = format!("{} {}", self.task.description, &s);
-                ParseState::InDescription
-            }
-            */
+            (_, _) => ParseState::InDescription, /*
+                                                 // Default case -- move to description and append
+                                                 (_, _) => {
+                                                     let s = token.to_string();
+                                                     if s.starts_with('@') {
+                                                         self.task
+                                                             .contexts
+                                                             .push(s.strip_prefix('@').unwrap().to_string());
+                                                     } else if s.starts_with('+') {
+                                                         self.task
+                                                             .projects
+                                                             .push(s.strip_prefix('+').unwrap().to_string());
+                                                     }
+                                                     //self.task.description.push_str(&s);
+                                                     self.task.description = format!("{} {}", self.task.description, &s);
+                                                     ParseState::InDescription
+                                                 }
+                                                 */
         }
     }
 }

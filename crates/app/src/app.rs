@@ -1,18 +1,6 @@
+use crate::selection_list::SelectionList;
 use std::io::Write;
 use std::str::FromStr;
-use crate::selection_list::SelectionList;
-
-
-// TODO: break into modules
-
-//------------------------------------------------------------------------------
-//
-// Stateful list
-//
-//------------------------------------------------------------------------------
-
-// TODO: audit public visibility of fields/methods particularly of App, but in general
-
 
 //------------------------------------------------------------------------------
 //
@@ -20,6 +8,7 @@ use crate::selection_list::SelectionList;
 //
 //------------------------------------------------------------------------------
 
+/// Used to specify the App's current interaction mode
 #[derive(PartialEq)]
 pub enum Mode {
     Edit,
@@ -28,6 +17,7 @@ pub enum Mode {
     Confirm(ConfirmedAction),
 }
 
+/// Used to specify which list is currently under focus
 #[derive(PartialEq)]
 pub enum Focus {
     Tasks,
@@ -36,6 +26,7 @@ pub enum Focus {
     Priorities,
 }
 
+/// Actions requiring user confirmation
 #[derive(PartialEq)]
 pub enum ConfirmedAction {
     Save,
@@ -71,16 +62,16 @@ pub static NEW_TOKEN: &str = "[new]";
 impl<'a> App<'a> {
     pub fn new(title: &'a str, filepath: &'a str, tasks: &[todo_txt::task::Task]) -> App<'a> {
 
-        let tasks =  [
-            vec![todo_txt::task::Task::from_str(NEW_TOKEN).unwrap()], 
-            tasks.to_vec()
-        ].concat();
+        let tasks = [
+            vec![todo_txt::task::Task::from_str(NEW_TOKEN).unwrap()],
+            tasks.to_vec(),
+        ]
+        .concat();
 
         App {
             title,
             filepath,
             should_quit: false,
-
 
             task_list: SelectionList::with_items(App::get_task_items(&tasks)),
             context_list: SelectionList::with_items(App::get_context_items(&tasks)),
@@ -90,22 +81,20 @@ impl<'a> App<'a> {
             mode: Mode::Normal,
             focus: Focus::Tasks,
 
-            omit_completed : true,
+            omit_completed: true,
 
             //input: tui_input::Input::new("".to_string()),
             error_msg: "".to_string(),
 
             frame_time: 0f64,
 
-            tasks, // NB: this is at end since it consumes local task object used to create lists
-                   // above
+            tasks, // NB: at end since it consumes local task object
         }
     }
 
-    ///
     /// Create list of items for display, including ALL_TOKEN or NEW_TOKEN header
-    ///
     pub fn get_task_items(tasks: &[todo_txt::task::Task]) -> Vec<usize> {
+        // tasks already contains NEW_TOKEN task
         Vec::from_iter(0..tasks.len())
     }
 
@@ -159,9 +148,8 @@ impl<'a> App<'a> {
         }
         Ok(())
     }
-    
-    pub fn start_frame(&mut self) {
-    }
+
+    pub fn start_frame(&mut self) {}
 
     pub fn end_frame(&mut self, frame_time: f64) {
         self.frame_time = frame_time;
@@ -183,34 +171,33 @@ impl<'a> App<'a> {
             }
             task.completed = true;
         }
-
     }
 
     pub fn get_selected_task_list_idx(&self) -> Option<usize> {
         match self.task_list.selection() {
             Some(i) if i > 0 => Some(i),
-            _ => None
+            _ => None,
         }
     }
-    
+
     pub fn get_selected_task_idx(&self) -> Option<usize> {
         match self.task_list.selection() {
             Some(i) if i > 0 => self.task_list.items().get(i).cloned(),
-            _ => None
+            _ => None,
         }
     }
-    
+
     pub fn get_selected_task(&self) -> Option<&todo_txt::task::Task> {
         match self.get_selected_task_idx() {
             Some(idx) => self.tasks.get(idx),
-            _ => None
+            _ => None,
         }
     }
-    
+
     pub fn get_selected_task_mut(&mut self) -> Option<&mut todo_txt::task::Task> {
         match self.get_selected_task_idx() {
             Some(idx) => self.tasks.get_mut(idx),
-            _ => None
+            _ => None,
         }
     }
 
@@ -238,7 +225,7 @@ impl<'a> App<'a> {
 
         let task_items = [
             vec![0usize],
-            tasks_filter.task_indices.iter().map(|i| i+1).collect(),
+            tasks_filter.task_indices.iter().map(|i| i + 1).collect(),
         ]
         .concat();
 
@@ -269,8 +256,12 @@ impl<'a> App<'a> {
         self.priority_list = SelectionList::with_items(App::get_priority_items(&self.tasks));
         if let Some(priority) = selected_priority {
             let priority = priority.to_string();
-            self.priority_list
-                .select(self.priority_list.items().iter().position(|x| x == &priority));
+            self.priority_list.select(
+                self.priority_list
+                    .items()
+                    .iter()
+                    .position(|x| x == &priority),
+            );
         }
 
         // regenerate task list and reselect current task
@@ -319,7 +310,7 @@ impl<'a> App<'a> {
             },
             Mode::Edit => {}
             Mode::Search => {}
-            Mode::Confirm(_)=> {}
+            Mode::Confirm(_) => {}
         }
     }
 
@@ -344,7 +335,7 @@ impl<'a> App<'a> {
             },
             Mode::Edit => {}
             Mode::Search => {}
-            Mode::Confirm(_)=> {}
+            Mode::Confirm(_) => {}
         }
     }
 
@@ -366,7 +357,7 @@ impl<'a> App<'a> {
             },
             Mode::Edit => {}
             Mode::Search => {}
-            Mode::Confirm(_)=> {}
+            Mode::Confirm(_) => {}
         }
     }
 
@@ -388,7 +379,7 @@ impl<'a> App<'a> {
             },
             Mode::Edit => {}
             Mode::Search => {}
-            Mode::Confirm(_)=> {}
+            Mode::Confirm(_) => {}
         }
     }
 
@@ -406,15 +397,14 @@ impl<'a> App<'a> {
             }
         }
     }
-    
+
     pub fn cancel_action(&mut self) {
         self.mode = Mode::Normal;
     }
-    
+
     pub fn enter_confirm_mode(&mut self, action: ConfirmedAction) {
         self.mode = Mode::Confirm(action);
     }
-    
 
     // enter editing mode and return the string of the currently selected task
     pub fn enter_edit_mode(&mut self) -> String {

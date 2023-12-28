@@ -54,23 +54,26 @@ impl Task {
     pub fn description(&self) -> &str {
         &self.description
     }
-    
+
     pub fn set_description(&mut self, description: &str) {
         self.description = description.to_string();
-        let tokens: std::collections::VecDeque<&str> = self.description.split_whitespace().collect();
+        let tokens: std::collections::VecDeque<&str> =
+            self.description.split_whitespace().collect();
         for token in tokens {
             if token.starts_with('@') {
-                self.contexts.push(token.strip_prefix('@').unwrap().to_string());
+                self.contexts
+                    .push(token.strip_prefix('@').unwrap().to_string());
             } else if token.starts_with('+') {
-                self.projects.push(token.strip_prefix('+').unwrap().to_string());
+                self.projects
+                    .push(token.strip_prefix('+').unwrap().to_string());
             }
         }
     }
-    
+
     pub fn contexts(&self) -> &[String] {
         &self.contexts
     }
-    
+
     pub fn projects(&self) -> &[String] {
         &self.projects
     }

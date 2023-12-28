@@ -1,6 +1,6 @@
-2023-12-12 add support for VDO_DEFAULT_LOCATION to specify a default todo.txt @vdo +feature
-2023-12-13 mechanism for supplying a save-hook to git commit and/or push @vdo +feature
-2023-12-27 add 'h' help key to display keybinds @vdo
-2023-12-27 add --help option @vdo +feature
-2023-12-27 documentation pass @vdo
-2023-12-27 write readme @vdo
+2023-12-12 add support for KDO_DEFAULT_LOCATION to specify a default todo.txt @kdo +feature
+2023-12-13 mechanism for supplying a save-hook to git commit and/or push @kdo +feature
+2023-12-27 add 'h' help key to display keybinds @kdo
+2023-12-27 add --help option @kdo +feature
+2023-12-27 documentation pass @kdo
+2023-12-27 write readme @kdo

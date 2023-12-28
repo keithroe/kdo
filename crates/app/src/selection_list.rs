@@ -5,21 +5,20 @@ pub struct SelectionList<T> {
     items: Vec<T>,
 }
 
-impl<T:std::fmt::Debug> std::fmt::Debug for SelectionList<T> {
+impl<T: std::fmt::Debug> std::fmt::Debug for SelectionList<T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("SelectionList")
-         .field("selection", &self.selection)
-         .field("items", &self.items)
-         .finish()
+            .field("selection", &self.selection)
+            .field("items", &self.items)
+            .finish()
     }
 }
 
 impl<T> SelectionList<T> {
-
     pub fn selection(&self) -> Option<usize> {
         self.selection
     }
-    
+
     pub fn items(&self) -> &Vec<T> {
         &self.items
     }
@@ -58,7 +57,7 @@ impl<T> SelectionList<T> {
         };
         self.selection = Some(i);
     }
-    
+
     pub fn select(&mut self, selection: Option<usize>) {
         if let Some(s) = selection {
             if s < self.items.len() {
@@ -75,4 +74,3 @@ impl<T> SelectionList<T> {
         self.selection = None;
     }
 }
-

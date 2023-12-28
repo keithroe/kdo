@@ -1,4 +1,3 @@
-
 #[derive(Default)]
 pub struct State {
     pub task_list_state: ratatui::widgets::ListState,
@@ -12,11 +11,11 @@ pub struct State {
 impl State {
     pub fn new() -> Self {
         State {
-            task_list_state : ratatui::widgets::ListState::default(),
-            context_list_state : ratatui::widgets::ListState::default(),
-            project_list_state : ratatui::widgets::ListState::default(),
-            priority_list_state : ratatui::widgets::ListState::default(),
-            input : tui_input::Input::new("".to_string()),
+            task_list_state: ratatui::widgets::ListState::default(),
+            context_list_state: ratatui::widgets::ListState::default(),
+            project_list_state: ratatui::widgets::ListState::default(),
+            priority_list_state: ratatui::widgets::ListState::default(),
+            input: tui_input::Input::new("".to_string()),
         }
     }
 }

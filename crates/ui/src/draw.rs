@@ -1,6 +1,6 @@
-use ratatui::style::Color;
-use app::app;
 use crate::state;
+use app::app;
+use ratatui::style::Color;
 
 pub fn draw<B: ratatui::backend::Backend>(
     frame: &mut ratatui::Frame<B>,
@@ -11,9 +11,15 @@ pub fn draw<B: ratatui::backend::Backend>(
     // Update selections lists
     //
     ui_state.task_list_state.select(app.task_list.selection());
-    ui_state.context_list_state.select(app.context_list.selection());
-    ui_state.project_list_state.select(app.project_list.selection());
-    ui_state.priority_list_state.select(app.priority_list.selection());
+    ui_state
+        .context_list_state
+        .select(app.context_list.selection());
+    ui_state
+        .project_list_state
+        .select(app.project_list.selection());
+    ui_state
+        .priority_list_state
+        .select(app.priority_list.selection());
 
     //
     // Create main body chunks
@@ -60,11 +66,11 @@ pub fn draw<B: ratatui::backend::Backend>(
         .split(chunks[1]);
 
     // We can now render the item list
-    let tasks : Vec<String> = app
+    let tasks: Vec<String> = app
         .task_list
         .items()
         .iter()
-        .map( |idx| app.tasks[*idx].to_string() )
+        .map(|idx| app.tasks[*idx].to_string())
         .collect();
 
     frame.render_stateful_widget(
@@ -111,28 +117,25 @@ pub fn draw<B: ratatui::backend::Backend>(
     // Edit line at bottom
     //
     let edit_block = match &app.mode {
-        app::Mode::Edit => {
-            ratatui::widgets::Paragraph::new(ui_state.input.value())
-                .style(ratatui::style::Style::default().fg(Color::Reset))
-                .block(ratatui::widgets::Block::default().borders(ratatui::widgets::Borders::ALL))
-        } 
-        app::Mode::Confirm(action)=> {
+        app::Mode::Edit => ratatui::widgets::Paragraph::new(ui_state.input.value())
+            .style(ratatui::style::Style::default().fg(Color::Reset))
+            .block(ratatui::widgets::Block::default().borders(ratatui::widgets::Borders::ALL)),
+        app::Mode::Confirm(action) => {
             let action_str = match action {
                 app::ConfirmedAction::Save => "Save file",
-                app::ConfirmedAction::Sort=> "Sort tasks",
-            }; 
+                app::ConfirmedAction::Sort => "Sort tasks",
+            };
             ratatui::widgets::Paragraph::new(format!("{}? [Y/n]", action_str))
                 .style(ratatui::style::Style::default().fg(Color::Reset))
                 .block(ratatui::widgets::Block::default().borders(ratatui::widgets::Borders::ALL))
         }
         _ => {
-            ratatui::widgets::Paragraph::new( 
-                ""
-                //format!("{:.2}", app.frame_time*1000.0f64)
-                //"hjkl: navigate  <ent>: begin/save edit  <esc>: cancel edit  q: quit  s: save  S:sort",
-                )
-                .style(ratatui::style::Style::default().fg(Color::DarkGray))
-                .block(ratatui::widgets::Block::default().borders(ratatui::widgets::Borders::ALL))
+            ratatui::widgets::Paragraph::new(
+                "", //format!("{:.2}", app.frame_time*1000.0f64)
+                   //"hjkl: navigate  <ent>: begin/save edit  <esc>: cancel edit  q: quit  s: save  S:sort",
+            )
+            .style(ratatui::style::Style::default().fg(Color::DarkGray))
+            .block(ratatui::widgets::Block::default().borders(ratatui::widgets::Borders::ALL))
         }
     };
     frame.render_widget(edit_block, chunks[2]);
