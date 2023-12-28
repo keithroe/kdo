@@ -1,8 +1,15 @@
 use clap::Parser;
 use std::io::BufRead;
 
+
+pub static ABOUT_STR: &str = 
+r"
+A simple viewer/editor of TODO lists in the todo.txt format
+(https://github.com/todotxt/todo.txt).";
+
 #[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
+#[command(author, version)]
+#[command(about = ABOUT_STR, long_about = ui::terminal::KEYBIND_HELP_STR)]
 struct Args {
     /// todo.txt filename and location
     #[arg(short, long, default_value = "./todo.txt")]
@@ -24,7 +31,7 @@ fn main() {
     // Process tasks found in file
     let reader = std::io::BufReader::new(file);
     let tasks = todo_txt::read_tasks(&mut reader.lines());
-    let mut app = app::App::new("kdo v0.1", &args.file, &tasks);
+    let mut app = app::App::new("vdo v0.1", &args.file, &tasks);
     let mut ui_state = ui::state::State::new();
 
     let res = ui::terminal::run(&mut app, &mut ui_state);

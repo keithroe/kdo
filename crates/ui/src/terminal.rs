@@ -3,6 +3,30 @@ use crate::state;
 
 use tui_input::backend::crossterm::EventHandler;
 
+
+pub static KEYBIND_HELP_STR: &str = 
+r"
+
+A simple viewer/editor of TODO lists in the todo.txt format
+(https://github.com/todotxt/todo.txt).
+
+Key bindings:
+Normal mode:
+  [s]:     Save task list to todo.txt file
+  [S]:     Sort task list
+  [q/ESC]: Quit
+  [h]:     Move focus one pane to left 
+  [j]:     Move selection up one item in current pane 
+  [k]:     Move selection down one item in current pane 
+  [l]:     Move focus one pane to right
+  [e/ENT]: Enter edit mode on current task selection
+  [x]:     Toggle visibility of all completed tasks
+  [X]:     Toggle completion of current task
+Edit mode:
+  [ESC]:   Exit edit mode without saving any modifications
+  [ENT]:   Exit edit mode and save modifications
+";
+
 pub fn run(
     app: &mut app::App,
     ui_state: &mut state::State,
