@@ -1,9 +1,7 @@
 use clap::Parser;
 use std::io::BufRead;
 
-
-pub static ABOUT_STR: &str = 
-r"
+pub static ABOUT_STR: &str = r"
 A simple viewer/editor of TODO lists in the todo.txt format
 (https://github.com/todotxt/todo.txt).";
 

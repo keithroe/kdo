@@ -52,66 +52,76 @@ pub fn draw<B: ratatui::backend::Backend>(
     //
     // Body: main todo browser
     //
-    let body_chunks = ratatui::layout::Layout::default()
-        .direction(ratatui::layout::Direction::Horizontal)
-        .constraints(
-            [
-                ratatui::layout::Constraint::Percentage(60), // tasks
-                ratatui::layout::Constraint::Percentage(15), // project
-                ratatui::layout::Constraint::Percentage(15), // context
-                ratatui::layout::Constraint::Percentage(10), //
-            ]
-            .as_ref(),
-        )
-        .split(chunks[1]);
+    if app.mode == app::Mode::Help {
+        let help_paragraph = ratatui::widgets::Paragraph::new(crate::terminal::KEYBIND_HELP_STR)
+            .block(
+                ratatui::widgets::Block::default()
+                    .title("help")
+                    .borders(ratatui::widgets::Borders::ALL),
+            );
+        frame.render_widget(help_paragraph, chunks[1]);
+    } else {
+        let body_chunks = ratatui::layout::Layout::default()
+            .direction(ratatui::layout::Direction::Horizontal)
+            .constraints(
+                [
+                    ratatui::layout::Constraint::Percentage(60), // tasks
+                    ratatui::layout::Constraint::Percentage(15), // project
+                    ratatui::layout::Constraint::Percentage(15), // context
+                    ratatui::layout::Constraint::Percentage(10), //
+                ]
+                .as_ref(),
+            )
+            .split(chunks[1]);
 
-    // We can now render the item list
-    let tasks: Vec<String> = app
-        .task_list
-        .items()
-        .iter()
-        .map(|idx| app.tasks[*idx].to_string())
-        .collect();
+        // We can now render the item list
+        let tasks: Vec<String> = app
+            .task_list
+            .items()
+            .iter()
+            .map(|idx| app.tasks[*idx].to_string())
+            .collect();
 
-    frame.render_stateful_widget(
-        render_list(
-            "task",
-            &tasks,
-            app.mode == app::Mode::Normal && app.focus == app::Focus::Tasks,
-        ),
-        body_chunks[0],
-        &mut ui_state.task_list_state,
-    );
+        frame.render_stateful_widget(
+            render_list(
+                "task",
+                &tasks,
+                app.mode == app::Mode::Normal && app.focus == app::Focus::Tasks,
+            ),
+            body_chunks[0],
+            &mut ui_state.task_list_state,
+        );
 
-    frame.render_stateful_widget(
-        render_list(
-            "context",
-            app.context_list.items(),
-            app.mode == app::Mode::Normal && app.focus == app::Focus::Contexts,
-        ),
-        body_chunks[1],
-        &mut ui_state.context_list_state,
-    );
+        frame.render_stateful_widget(
+            render_list(
+                "context",
+                app.context_list.items(),
+                app.mode == app::Mode::Normal && app.focus == app::Focus::Contexts,
+            ),
+            body_chunks[1],
+            &mut ui_state.context_list_state,
+        );
 
-    frame.render_stateful_widget(
-        render_list(
-            "project",
-            app.project_list.items(),
-            app.mode == app::Mode::Normal && app.focus == app::Focus::Projects,
-        ),
-        body_chunks[2],
-        &mut ui_state.project_list_state,
-    );
+        frame.render_stateful_widget(
+            render_list(
+                "project",
+                app.project_list.items(),
+                app.mode == app::Mode::Normal && app.focus == app::Focus::Projects,
+            ),
+            body_chunks[2],
+            &mut ui_state.project_list_state,
+        );
 
-    frame.render_stateful_widget(
-        render_list(
-            "priority",
-            app.priority_list.items(),
-            app.mode == app::Mode::Normal && app.focus == app::Focus::Priorities,
-        ),
-        body_chunks[3],
-        &mut ui_state.priority_list_state,
-    );
+        frame.render_stateful_widget(
+            render_list(
+                "priority",
+                app.priority_list.items(),
+                app.mode == app::Mode::Normal && app.focus == app::Focus::Priorities,
+            ),
+            body_chunks[3],
+            &mut ui_state.priority_list_state,
+        );
+    }
 
     //
     // Edit line at bottom

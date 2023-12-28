@@ -13,7 +13,7 @@ use std::str::FromStr;
 pub enum Mode {
     Edit,
     Normal,
-    Search,
+    Help,
     Confirm(ConfirmedAction),
 }
 
@@ -61,7 +61,6 @@ pub static NEW_TOKEN: &str = "[new]";
 
 impl<'a> App<'a> {
     pub fn new(title: &'a str, filepath: &'a str, tasks: &[todo_txt::task::Task]) -> App<'a> {
-
         let tasks = [
             vec![todo_txt::task::Task::from_str(NEW_TOKEN).unwrap()],
             tasks.to_vec(),
@@ -309,7 +308,7 @@ impl<'a> App<'a> {
                 }
             },
             Mode::Edit => {}
-            Mode::Search => {}
+            Mode::Help => {}
             Mode::Confirm(_) => {}
         }
     }
@@ -334,7 +333,7 @@ impl<'a> App<'a> {
                 }
             },
             Mode::Edit => {}
-            Mode::Search => {}
+            Mode::Help => {}
             Mode::Confirm(_) => {}
         }
     }
@@ -356,7 +355,7 @@ impl<'a> App<'a> {
                 }
             },
             Mode::Edit => {}
-            Mode::Search => {}
+            Mode::Help => {}
             Mode::Confirm(_) => {}
         }
     }
@@ -378,7 +377,7 @@ impl<'a> App<'a> {
                 }
             },
             Mode::Edit => {}
-            Mode::Search => {}
+            Mode::Help => {}
             Mode::Confirm(_) => {}
         }
     }
@@ -448,11 +447,11 @@ impl<'a> App<'a> {
         }
     }
 
-    pub fn enter_search_mode(&mut self) {
-        self.mode = Mode::Search;
+    pub fn enter_help_mode(&mut self) {
+        self.mode = Mode::Help;
     }
 
-    pub fn exit_search_mode(&mut self) {
+    pub fn exit_help_mode(&mut self) {
         self.mode = Mode::Normal;
     }
 }

@@ -3,10 +3,7 @@ use crate::state;
 
 use tui_input::backend::crossterm::EventHandler;
 
-
-pub static KEYBIND_HELP_STR: &str = 
-r"
-
+pub static KEYBIND_HELP_STR: &str = r"
 A simple viewer/editor of TODO lists in the todo.txt format
 (https://github.com/todotxt/todo.txt).
 
@@ -22,9 +19,12 @@ Normal mode:
   [e/ENT]: Enter edit mode on current task selection
   [x]:     Toggle visibility of all completed tasks
   [X]:     Toggle completion of current task
+  [H/SPC]: Enter help mode display 
 Edit mode:
   [ESC]:   Exit edit mode without saving any modifications
   [ENT]:   Exit edit mode and save modifications
+Help mode:
+  [ESC/SPC]: Exit help mode
 ";
 
 pub fn run(
@@ -89,6 +89,10 @@ fn run_app<B: ratatui::backend::Backend>(
                         crossterm::event::KeyCode::Char('k') => {
                             app.navigate_up();
                         }
+                        crossterm::event::KeyCode::Char('H')
+                        | crossterm::event::KeyCode::Char(' ') => {
+                            app.enter_help_mode();
+                        }
                         crossterm::event::KeyCode::Char('h') => {
                             app.navigate_left();
                         }
@@ -127,7 +131,12 @@ fn run_app<B: ratatui::backend::Backend>(
                             .handle_event(&crossterm::event::Event::Key(key));
                     }
                 },
-                app::Mode::Search => {}
+                app::Mode::Help => match key.code {
+                    crossterm::event::KeyCode::Esc | crossterm::event::KeyCode::Char(' ') => {
+                        app.exit_help_mode();
+                    }
+                    _ => {}
+                },
                 app::Mode::Confirm(_) => match key.code {
                     crossterm::event::KeyCode::Esc
                     | crossterm::event::KeyCode::Char('N')
