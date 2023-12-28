@@ -80,7 +80,7 @@ impl<'a> App<'a> {
             mode: Mode::Normal,
             focus: Focus::Tasks,
 
-            omit_completed: true,
+            omit_completed: false,
 
             //input: tui_input::Input::new("".to_string()),
             error_msg: "".to_string(),
@@ -158,17 +158,25 @@ impl<'a> App<'a> {
         self.tasks.sort();
     }
 
-    pub fn toggle_completed(&mut self) {
+    pub fn toggle_view_completed(&mut self) {
         self.omit_completed = !self.omit_completed;
         self.filter_tasks();
     }
 
-    pub fn mark_selected_task_complete(&mut self) {
+    pub fn toggle_task_complete(&mut self) {
         if let Some(task) = self.get_selected_task_mut() {
-            if task.date_created.is_some() {
-                task.date_completed = Some(chrono::Local::now().date_naive());
+            match task.completed {
+                true => {
+                    task.completed = false;
+                    task.date_completed = None; 
+                }
+                false => {
+                    if task.date_created.is_some() {
+                        task.date_completed = Some(chrono::Local::now().date_naive());
+                    }
+                    task.completed = true;
+                }
             }
-            task.completed = true;
         }
     }
 

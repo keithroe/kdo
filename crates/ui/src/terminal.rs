@@ -110,10 +110,10 @@ fn run_app<B: ratatui::backend::Backend>(
                             app.enter_confirm_mode(app::ConfirmedAction::Sort);
                         }
                         crossterm::event::KeyCode::Char('x') => {
-                            app.toggle_completed();
+                            app.toggle_view_completed();
                         }
                         crossterm::event::KeyCode::Char('X') => {
-                            app.mark_selected_task_complete();
+                            app.toggle_task_complete();
                         }
                         _ => {}
                     }
