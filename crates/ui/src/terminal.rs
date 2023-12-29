@@ -9,20 +9,20 @@ A simple viewer/editor of TODO lists in the todo.txt format
 
 Key bindings:
 Normal mode:
-  [s]:     Save task list to todo.txt file
-  [S]:     Sort task list
-  [q/ESC]: Quit
-  [h]:     Move focus one pane to left 
-  [j]:     Move selection up one item in current pane 
-  [k]:     Move selection down one item in current pane 
-  [l]:     Move focus one pane to right
-  [e/ENT]: Enter edit mode on current task selection
-  [x]:     Toggle visibility of all completed tasks
-  [X]:     Toggle completion of current task
-  [H/SPC]: Enter help mode display 
+  [s]:       Save task list to todo.txt file
+  [S]:       Sort task list
+  [q/ESC]:   Quit
+  [h/LEFT]:  Move focus one pane to left 
+  [j/RIGHT]: Move selection up one item in current pane 
+  [k/UP]:    Move selection down one item in current pane 
+  [l/DOWN]:  Move focus one pane to right
+  [e/ENT]:   Enter edit mode on current task selection
+  [x]:       Toggle visibility of all completed tasks
+  [X]:       Toggle completion of current task
+  [H/SPC]:   Enter help mode display 
 Edit mode:
-  [ESC]:   Exit edit mode without saving any modifications
-  [ENT]:   Exit edit mode and save modifications
+  [ESC]:     Exit edit mode without saving any modifications
+  [ENT]:     Exit edit mode and save modifications
 Help mode:
   [ESC/SPC]: Exit help mode
 ";
@@ -83,21 +83,21 @@ fn run_app<B: ratatui::backend::Backend>(
                         crossterm::event::KeyCode::Esc | crossterm::event::KeyCode::Char('q') => {
                             app.should_quit = true // call func that can cleanup
                         }
-                        crossterm::event::KeyCode::Char('j') => {
+                        crossterm::event::KeyCode::Char('j') | crossterm::event::KeyCode::Down => {
                             app.navigate_down();
                         }
-                        crossterm::event::KeyCode::Char('k') => {
+                        crossterm::event::KeyCode::Char('k') | crossterm::event::KeyCode::Up => {
                             app.navigate_up();
+                        }
+                        crossterm::event::KeyCode::Char('h') | crossterm::event::KeyCode::Left => {
+                            app.navigate_left();
+                        }
+                        crossterm::event::KeyCode::Char('l') | crossterm::event::KeyCode::Right => {
+                            app.navigate_right();
                         }
                         crossterm::event::KeyCode::Char('H')
                         | crossterm::event::KeyCode::Char(' ') => {
                             app.enter_help_mode();
-                        }
-                        crossterm::event::KeyCode::Char('h') => {
-                            app.navigate_left();
-                        }
-                        crossterm::event::KeyCode::Char('l') => {
-                            app.navigate_right();
                         }
                         crossterm::event::KeyCode::Char('e') | crossterm::event::KeyCode::Enter => {
                             let input_string = app.enter_edit_mode();

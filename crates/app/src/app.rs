@@ -168,7 +168,7 @@ impl<'a> App<'a> {
             match task.completed {
                 true => {
                     task.completed = false;
-                    task.date_completed = None; 
+                    task.date_completed = None;
                 }
                 false => {
                     if task.date_created.is_some() {
