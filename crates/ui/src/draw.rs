@@ -3,7 +3,7 @@ use app::app;
 
 static FOCUS_COLOR : ratatui::style::Color = ratatui::style::Color::Reset; 
 static UNFOCUS_COLOR : ratatui::style::Color = ratatui::style::Color::DarkGray; 
-static BG_COLOR : ratatui::style::Color    = ratatui::style::Color::Blue; 
+static BG_COLOR : ratatui::style::Color    = ratatui::style::Color::Reset; 
 static SELECTION_COLOR : ratatui::style::Color = ratatui::style::Color::Yellow; 
 
 pub fn draw<B: ratatui::backend::Backend>(
