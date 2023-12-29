@@ -1,6 +1,10 @@
 use crate::state;
 use app::app;
-use ratatui::style::Color;
+
+static FOCUS_COLOR : ratatui::style::Color = ratatui::style::Color::Reset; 
+static UNFOCUS_COLOR : ratatui::style::Color = ratatui::style::Color::DarkGray; 
+static BG_COLOR : ratatui::style::Color    = ratatui::style::Color::Blue; 
+static SELECTION_COLOR : ratatui::style::Color = ratatui::style::Color::Yellow; 
 
 pub fn draw<B: ratatui::backend::Backend>(
     frame: &mut ratatui::Frame<B>,
@@ -40,11 +44,11 @@ pub fn draw<B: ratatui::backend::Backend>(
     // Header: display application title
     //
     let header_block = ratatui::widgets::Paragraph::new(app.title)
-        .style(ratatui::style::Style::default().fg(Color::Yellow))
+        .style(ratatui::style::Style::default().fg(SELECTION_COLOR).bg(BG_COLOR))
         .alignment(ratatui::layout::Alignment::Center)
         .block(
             ratatui::widgets::Block::default()
-                .style(ratatui::style::Style::default().fg(Color::DarkGray))
+                .style(ratatui::style::Style::default().fg(UNFOCUS_COLOR).bg(BG_COLOR))
                 .borders(ratatui::widgets::Borders::ALL), //.borders(ratatui::widgets::Borders::BOTTOM | ratatui::widgets::Borders::TOP),
         );
     frame.render_widget(header_block, chunks[0]);
@@ -128,7 +132,7 @@ pub fn draw<B: ratatui::backend::Backend>(
     //
     let edit_block = match &app.mode {
         app::Mode::Edit => ratatui::widgets::Paragraph::new(ui_state.input.value())
-            .style(ratatui::style::Style::default().fg(Color::Reset))
+            .style(ratatui::style::Style::default().fg(FOCUS_COLOR).bg(BG_COLOR))
             .block(ratatui::widgets::Block::default().borders(ratatui::widgets::Borders::ALL)),
         app::Mode::Confirm(action) => {
             let action_str = match action {
@@ -136,7 +140,7 @@ pub fn draw<B: ratatui::backend::Backend>(
                 app::ConfirmedAction::Sort => "Sort tasks",
             };
             ratatui::widgets::Paragraph::new(format!("{}? [Y/n]", action_str))
-                .style(ratatui::style::Style::default().fg(Color::Reset))
+                .style(ratatui::style::Style::default().fg(FOCUS_COLOR).bg(BG_COLOR))
                 .block(ratatui::widgets::Block::default().borders(ratatui::widgets::Borders::ALL))
         }
         _ => {
@@ -144,7 +148,7 @@ pub fn draw<B: ratatui::backend::Backend>(
                 "", //format!("{:.2}", app.frame_time*1000.0f64)
                    //"hjkl: navigate  <ent>: begin/save edit  <esc>: cancel edit  q: quit  s: save  S:sort",
             )
-            .style(ratatui::style::Style::default().fg(Color::DarkGray))
+            .style(ratatui::style::Style::default().fg(UNFOCUS_COLOR).bg(BG_COLOR))
             .block(ratatui::widgets::Block::default().borders(ratatui::widgets::Borders::ALL))
         }
     };
@@ -178,12 +182,15 @@ fn render_list<'a>(
         .block(
             ratatui::widgets::Block::default()
                 .borders(ratatui::widgets::Borders::ALL)
-                .style(ratatui::style::Style::default().fg(if is_focus {
-                    Color::Reset
-                } else {
-                    Color::DarkGray
-                }))
+                .style(ratatui::style::Style::default()
+                    .fg(if is_focus {
+                            FOCUS_COLOR
+                        } else {
+                            UNFOCUS_COLOR
+                        })
+                    .bg(BG_COLOR)
+                )
                 .title(title),
         )
-        .highlight_style(ratatui::style::Style::default().fg(Color::Yellow))
+        .highlight_style(ratatui::style::Style::default().fg(SELECTION_COLOR).bg(BG_COLOR))
 }
