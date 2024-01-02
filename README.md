@@ -1,1 +1,18 @@
-read me
+
+## vdo 
+
+`vdo` is a simple editor and viewer of [todo.txt](https://github.com/todotxt/todo.txt "todo.txt format specification") files.  It is designed to complement **todo.txt**'s monolithic list-based format by allowing easy browsing via filtering of contexts, projects, priorities, and task completion.  Tasks may be added, deleted, marked complete, or edited textually. `vdo` is written in [rust](https://www.rust-lang.org/).
+
+# screenshots
+
+#### Components
+- todo_txt - crate for parsing, writing, and in-memory representation of todo.txt tasks
+- ui - crate used for managing terminal state and user input (`ui::terminal`) and terminal interface (`ui::draw`)
+- app - the `vdo` application state and operations on this state
+
+#### Key third party libraries used
+
+- [ratatui](https://docs.rs/ratatui/latest/ratatui/) - for creating terminal-based UIs
+- [crossterm](https://docs.rs/crossterm/latest/crossterm/) - lower level terminal manipulation
+
+
