@@ -3,7 +3,7 @@
 
 `vdo` is a simple editor and viewer of [todo.txt](https://github.com/todotxt/todo.txt "todo.txt format specification") files.  It is designed to complement **todo.txt**'s monolithic list-based format by allowing easy browsing via filtering of contexts, projects, priorities, and task completion.  Tasks may be added, deleted, marked complete, or edited textually. `vdo` is written in [rust](https://www.rust-lang.org/).
 
-# screenshots
+![vdo_0](https://github.com/keithroe/kdo/assets/775667/9d6f00ca-6d1b-4c14-879f-70313f1003db)
 
 #### Components
 - todo_txt - crate for parsing, writing, and in-memory representation of todo.txt tasks
