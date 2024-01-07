@@ -34,7 +34,7 @@ fn main() {
     // Process tasks found in file
     let reader = std::io::BufReader::new(file);
     let tasks = todo_txt::read_tasks(&mut reader.lines());
-    let mut app = app::App::new("vdo v0.1", &filename, &tasks);
+    let mut app = app::App::new("kdo v0.1", &filename, &tasks);
     let mut ui_state = ui::state::State::new();
 
     let res = ui::terminal::run(&mut app, &mut ui_state);

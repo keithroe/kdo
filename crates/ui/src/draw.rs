@@ -2,7 +2,8 @@ use crate::state;
 use app::app;
 
 static FOCUS_COLOR : ratatui::style::Color = ratatui::style::Color::Reset; 
-static UNFOCUS_COLOR : ratatui::style::Color = ratatui::style::Color::DarkGray; 
+//static UNFOCUS_COLOR : ratatui::style::Color = ratatui::style::Color::DarkGray; 
+static UNFOCUS_COLOR : ratatui::style::Color = ratatui::style::Color::Rgb(96,96,96); 
 static BG_COLOR : ratatui::style::Color    = ratatui::style::Color::Reset; 
 static SELECTION_COLOR : ratatui::style::Color = ratatui::style::Color::Yellow; 
 

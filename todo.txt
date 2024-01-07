@@ -6,4 +6,4 @@ x 2023-12-28 2023-12-27 add 'h' help key to display keybinds @kdo
 x 2023-12-28 2023-12-27 add --help option @kdo +feature
 x 2023-12-28 2023-12-28 Add arrow navigation in addition to hjkl @kdo +rfe
 x 2023-12-28 2023-12-28 make 'x' key toggle completion, rather than 'make complete' @kdo
-2023-12-28 Mechanism to allow user to customize colors @vdo +feature
+2023-12-28 Mechanism to allow user to customize colors @kdo +feature
