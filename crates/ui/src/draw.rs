@@ -1,9 +1,11 @@
 use crate::state;
 use app::app;
 
+// Can choose arbitrary rgb value as such:
+//static UNFOCUS_COLOR : ratatui::style::Color = ratatui::style::Color::Rgb(96,96,96); 
+
 static FOCUS_COLOR : ratatui::style::Color = ratatui::style::Color::Reset; 
-//static UNFOCUS_COLOR : ratatui::style::Color = ratatui::style::Color::DarkGray; 
-static UNFOCUS_COLOR : ratatui::style::Color = ratatui::style::Color::Rgb(96,96,96); 
+static UNFOCUS_COLOR : ratatui::style::Color = ratatui::style::Color::DarkGray; 
 static BG_COLOR : ratatui::style::Color    = ratatui::style::Color::Reset; 
 static SELECTION_COLOR : ratatui::style::Color = ratatui::style::Color::Yellow; 
 
@@ -15,16 +17,16 @@ pub fn draw<B: ratatui::backend::Backend>(
     //
     // Update selections lists
     //
-    ui_state.task_list_state.select(app.task_list.selection());
+    ui_state.task_list_state.select(app.task_list().selection());
     ui_state
         .context_list_state
-        .select(app.context_list.selection());
+        .select(app.context_list().selection());
     ui_state
         .project_list_state
-        .select(app.project_list.selection());
+        .select(app.project_list().selection());
     ui_state
         .priority_list_state
-        .select(app.priority_list.selection());
+        .select(app.priority_list().selection());
 
     //
     // Create main body chunks
@@ -54,10 +56,10 @@ pub fn draw<B: ratatui::backend::Backend>(
         );
     frame.render_widget(header_block, chunks[0]);
 
-    //
-    // Body: main todo browser
-    //
-    if app.mode == app::Mode::Help {
+    if app.mode() == app::Mode::Help {
+        //
+        // Render only help info in the main chunk
+        //
         let help_paragraph = ratatui::widgets::Paragraph::new(crate::terminal::KEYBIND_HELP_STR)
             .block(
                 ratatui::widgets::Block::default()
@@ -66,6 +68,9 @@ pub fn draw<B: ratatui::backend::Backend>(
             );
         frame.render_widget(help_paragraph, chunks[1]);
     } else {
+        //
+        // Body: main todo browser
+        //
         let body_chunks = ratatui::layout::Layout::default()
             .direction(ratatui::layout::Direction::Horizontal)
             .constraints(
@@ -81,17 +86,17 @@ pub fn draw<B: ratatui::backend::Backend>(
 
         // We can now render the item list
         let tasks: Vec<String> = app
-            .task_list
+            .task_list()
             .items()
             .iter()
-            .map(|idx| app.tasks[*idx].to_string())
+            .map(|idx| app.tasks()[*idx].to_string())
             .collect();
 
         frame.render_stateful_widget(
             render_list(
                 "task",
                 &tasks,
-                app.mode == app::Mode::Normal && app.focus == app::Focus::Tasks,
+                app.mode() == app::Mode::Normal && app.focus() == app::Focus::Tasks,
             ),
             body_chunks[0],
             &mut ui_state.task_list_state,
@@ -100,8 +105,8 @@ pub fn draw<B: ratatui::backend::Backend>(
         frame.render_stateful_widget(
             render_list(
                 "context",
-                app.context_list.items(),
-                app.mode == app::Mode::Normal && app.focus == app::Focus::Contexts,
+                app.context_list().items(),
+                app.mode() == app::Mode::Normal && app.focus() == app::Focus::Contexts,
             ),
             body_chunks[1],
             &mut ui_state.context_list_state,
@@ -110,8 +115,8 @@ pub fn draw<B: ratatui::backend::Backend>(
         frame.render_stateful_widget(
             render_list(
                 "project",
-                app.project_list.items(),
-                app.mode == app::Mode::Normal && app.focus == app::Focus::Projects,
+                app.project_list().items(),
+                app.mode() == app::Mode::Normal && app.focus() == app::Focus::Projects,
             ),
             body_chunks[2],
             &mut ui_state.project_list_state,
@@ -120,8 +125,8 @@ pub fn draw<B: ratatui::backend::Backend>(
         frame.render_stateful_widget(
             render_list(
                 "priority",
-                app.priority_list.items(),
-                app.mode == app::Mode::Normal && app.focus == app::Focus::Priorities,
+                app.priority_list().items(),
+                app.mode() == app::Mode::Normal && app.focus() == app::Focus::Priorities,
             ),
             body_chunks[3],
             &mut ui_state.priority_list_state,
@@ -131,7 +136,7 @@ pub fn draw<B: ratatui::backend::Backend>(
     //
     // Edit line at bottom
     //
-    let edit_block = match &app.mode {
+    let edit_block = match &app.mode() {
         app::Mode::Edit => ratatui::widgets::Paragraph::new(ui_state.input.value())
             .style(ratatui::style::Style::default().fg(FOCUS_COLOR).bg(BG_COLOR))
             .block(ratatui::widgets::Block::default().borders(ratatui::widgets::Borders::ALL)),
@@ -155,7 +160,7 @@ pub fn draw<B: ratatui::backend::Backend>(
     };
     frame.render_widget(edit_block, chunks[2]);
 
-    if app.mode == app::Mode::Edit {
+    if app.mode() == app::Mode::Edit {
         let width = chunks[0].width.max(3) - 3; // keep 2 for borders and 1 for cursor
         let scroll = ui_state.input.visual_scroll(width as usize);
         // Make the cursor visible and ask tui-rs to put it at the specified coordinates after rendering

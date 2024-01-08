@@ -9,7 +9,7 @@ use std::str::FromStr;
 //------------------------------------------------------------------------------
 
 /// Used to specify the App's current interaction mode
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy, Clone)]
 pub enum Mode {
     Edit,
     Normal,
@@ -18,7 +18,7 @@ pub enum Mode {
 }
 
 /// Used to specify which list is currently under focus
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy, Clone)]
 pub enum Focus {
     Tasks,
     Projects,
@@ -27,7 +27,7 @@ pub enum Focus {
 }
 
 /// Actions requiring user confirmation
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy, Clone)]
 pub enum ConfirmedAction {
     Save,
     Sort,
@@ -36,24 +36,22 @@ pub enum ConfirmedAction {
 pub struct App<'a> {
     pub title: &'a str,
     pub filepath: &'a str,
-    pub should_quit: bool,
+    should_quit: bool,
 
-    pub tasks: Vec<todo_txt::task::Task>,
+    tasks: Vec<todo_txt::task::Task>,
 
-    pub task_list: SelectionList<usize>,
+    task_list: SelectionList<usize>,
 
-    pub context_list: SelectionList<String>,
-    pub project_list: SelectionList<String>,
-    pub priority_list: SelectionList<String>,
+    context_list: SelectionList<String>,
+    project_list: SelectionList<String>,
+    priority_list: SelectionList<String>,
 
-    pub mode: Mode,
-    pub focus: Focus,
+    mode: Mode,
+    focus: Focus,
 
-    pub omit_completed: bool,
-
-    pub error_msg: String,
-
-    pub frame_time: f64,
+    omit_completed: bool,
+    error_msg: String,
+    frame_time: f64,
 }
 
 pub static ALL_TOKEN: &str = "[all]";
@@ -89,6 +87,42 @@ impl<'a> App<'a> {
 
             tasks, // NB: at end since it consumes local task object
         }
+    }
+
+    pub fn quit(&mut self) {
+        self.should_quit = true;
+    }
+
+    pub fn should_quit(&self) -> bool {
+        self.should_quit
+    }
+
+    pub fn tasks(&self) -> &Vec<todo_txt::task::Task> {
+        &self.tasks
+    }
+
+    pub fn context_list(&self) -> &SelectionList<String> {
+        &self.context_list
+    }
+
+    pub fn project_list(&self) -> &SelectionList<String> {
+        &self.project_list
+    }
+    
+    pub fn priority_list(&self) -> &SelectionList<String> {
+        &self.priority_list
+    }
+
+    pub fn mode(&self) -> Mode {
+        self.mode
+    }
+
+    pub fn focus(&self) -> Focus {
+        self.focus
+    }
+    
+    pub fn task_list(&self) -> &SelectionList<usize> {
+        &self.task_list
     }
 
     /// Create list of items for display, including ALL_TOKEN or NEW_TOKEN header

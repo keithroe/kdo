@@ -4,6 +4,11 @@ pub mod tasks;
 
 use std::str::FromStr;
 
+/// Read tasks from a line buffer.  Can be used to read from file as such:
+/// ```
+/// let reader = std::io::BufReader::new(file);
+/// let tasks = todo_txt::read_tasks(&mut reader.lines());
+/// ```
 pub fn read_tasks<B: std::io::BufRead>(lines: &mut std::io::Lines<B>) -> Vec<task::Task> {
     let mut tasks = Vec::new();
     for line in lines.map(|line| line.unwrap()) {

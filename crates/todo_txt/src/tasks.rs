@@ -28,12 +28,6 @@ pub struct TasksFilter<'a> {
     pub task_indices: Vec<usize>,
 }
 
-// for now do this the simplest, least efficient way -- copy everything.
-// if needed:
-// * with_ functions could modify in place
-// * collect_ functions could return str refs
-// * Tasks could be Vec of &Task and only refer into original owned list
-// *
 impl<'a> TasksFilter<'a> {
     pub fn new(tasks: &'a [Task]) -> TasksFilter {
         TasksFilter {

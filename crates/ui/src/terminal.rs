@@ -27,6 +27,8 @@ Help mode:
   [ESC/SPC]: Exit help mode
 ";
 
+/// Run the application.  Setup terminal, run the application loop, then cleanup
+/// on exit.
 pub fn run(
     app: &mut app::App,
     ui_state: &mut state::State,
@@ -62,6 +64,8 @@ pub fn run(
     Ok(())
 }
 
+/// The main application loop. Checks for user input, updates application state,
+/// then draws application UI to terminal.
 fn run_app<B: ratatui::backend::Backend>(
     terminal: &mut ratatui::Terminal<B>,
     app: &mut app::App,
@@ -77,11 +81,11 @@ fn run_app<B: ratatui::backend::Backend>(
 
         if let crossterm::event::Event::Key(key) = crossterm::event::read()? {
             let handle_input_start = std::time::SystemTime::now();
-            match app.mode {
+            match app.mode() {
                 app::Mode::Normal => {
                     match key.code {
                         crossterm::event::KeyCode::Esc | crossterm::event::KeyCode::Char('q') => {
-                            app.should_quit = true // call func that can cleanup
+                            app.quit()
                         }
                         crossterm::event::KeyCode::Char('j') | crossterm::event::KeyCode::Down => {
                             app.navigate_down();
@@ -155,7 +159,7 @@ fn run_app<B: ratatui::backend::Backend>(
         }
         app.end_frame(elapsed);
 
-        if app.should_quit {
+        if app.should_quit() {
             return Ok(());
         }
     }

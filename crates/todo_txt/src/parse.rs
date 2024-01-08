@@ -137,24 +137,7 @@ impl TaskParser {
                 self.task.date_created = Some(date);
                 ParseState::PastDate2
             }
-            (_, _) => ParseState::InDescription, /*
-                                                 // Default case -- move to description and append
-                                                 (_, _) => {
-                                                     let s = token.to_string();
-                                                     if s.starts_with('@') {
-                                                         self.task
-                                                             .contexts
-                                                             .push(s.strip_prefix('@').unwrap().to_string());
-                                                     } else if s.starts_with('+') {
-                                                         self.task
-                                                             .projects
-                                                             .push(s.strip_prefix('+').unwrap().to_string());
-                                                     }
-                                                     //self.task.description.push_str(&s);
-                                                     self.task.description = format!("{} {}", self.task.description, &s);
-                                                     ParseState::InDescription
-                                                 }
-                                                 */
+            (_, _) => ParseState::InDescription,
         }
     }
 }
